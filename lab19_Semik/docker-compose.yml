@@ -1,0 +1,80 @@
+x-db: &db
+  image: postgres:16
+  environment:
+    POSTGRES_USER: ${POSTGRES_USER:-pharmacy}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pharmacy}
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pharmacy}"]
+    interval: 5s
+    retries: 10
+  networks: [backend]
+
+x-service: &service
+  build: {context: ., dockerfile: placeholder}
+  networks: [backend]
+  restart: unless-stopped
+
+services:
+  gateway:
+    <<: *service
+    build: {context: ., dockerfile: gateway/Dockerfile}
+    ports: ["8000:8000"]
+    environment:
+      PRODUCT_URL: http://product-service:8000
+      WAREHOUSE_URL: http://warehouse-service:8000
+      ORDER_URL: http://order-service:8000
+      NOTIFICATION_URL: http://notification-service:8000
+    depends_on: [product-service, warehouse-service, order-service, notification-service]
+
+  product-service:
+    <<: *service
+    build: {context: ., dockerfile: product-service/Dockerfile}
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-pharmacy}:${POSTGRES_PASSWORD:-pharmacy}@product-db:5432/${POSTGRES_USER:-pharmacy}
+    depends_on: {product-db: {condition: service_healthy}}
+
+  warehouse-service:
+    <<: *service
+    build: {context: ., dockerfile: warehouse-service/Dockerfile}
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-pharmacy}:${POSTGRES_PASSWORD:-pharmacy}@warehouse-db:5432/${POSTGRES_USER:-pharmacy}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-pharmacy}:${RABBITMQ_PASSWORD:-pharmacy}@broker:5672/
+    depends_on: {warehouse-db: {condition: service_healthy}, broker: {condition: service_healthy}}
+
+  order-service:
+    <<: *service
+    build: {context: ., dockerfile: order-service/Dockerfile}
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-pharmacy}:${POSTGRES_PASSWORD:-pharmacy}@order-db:5432/${POSTGRES_USER:-pharmacy}
+      PRODUCT_URL: http://product-service:8000
+      WAREHOUSE_URL: http://warehouse-service:8000
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-pharmacy}:${RABBITMQ_PASSWORD:-pharmacy}@broker:5672/
+    depends_on: {order-db: {condition: service_healthy}, broker: {condition: service_healthy}}
+
+  notification-service:
+    <<: *service
+    build: {context: ., dockerfile: notification-service/Dockerfile}
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-pharmacy}:${POSTGRES_PASSWORD:-pharmacy}@notification-db:5432/${POSTGRES_USER:-pharmacy}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-pharmacy}:${RABBITMQ_PASSWORD:-pharmacy}@broker:5672/
+    depends_on: {notification-db: {condition: service_healthy}, broker: {condition: service_healthy}}
+
+  product-db: {<<: *db}
+  warehouse-db: {<<: *db}
+  order-db: {<<: *db}
+  notification-db: {<<: *db}
+
+  broker:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-pharmacy}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-pharmacy}
+    ports: ["15672:15672"]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      retries: 10
+    networks: [backend]
+
+networks:
+  backend:
