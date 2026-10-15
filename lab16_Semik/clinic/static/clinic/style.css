@@ -1,0 +1,14 @@
+body { font-family: Arial, sans-serif; margin: 0; background: #f3f6fa; color: #1c2733; }
+nav { background: #2a5d9f; padding: 12px 24px; display: flex; gap: 18px; align-items: center; }
+nav a { color: #fff; text-decoration: none; font-weight: bold; }
+nav .user { margin-left: auto; color: #fff; } .inline { display: inline; }
+main { max-width: 1050px; margin: 24px auto; padding: 0 16px; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th, td { padding: 7px; border-bottom: 1px solid #dfe5ec; text-align: left; }
+.card { background: #fff; padding: 16px; border-radius: 6px; margin: 12px 0; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.button, button { background: #2a5d9f; color: #fff; border: 0; padding: 7px 13px; border-radius: 4px; text-decoration: none; cursor: pointer; }
+.danger { background: #c62828; }
+.flash { padding: 10px; background: #dff0d8; margin-bottom: 10px; border-radius: 4px; }
+.status.cancelled { color: #c62828; } .status.completed { color: #2e7d32; }
+.pagination { margin: 14px 0; display: flex; gap: 10px; }

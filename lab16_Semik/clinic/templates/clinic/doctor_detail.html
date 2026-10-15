@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ doctor.full_name }}{% endblock %}
+{% block content %}
+<h1>{{ doctor.full_name }}</h1>
+<div class="card"><p>{{ doctor.specialty }}, {{ doctor.department }}, кабинет {{ doctor.cabinet }}, стаж {{ doctor.experience }} лет</p></div>
+<h2>Записи врача</h2>
+<ul>{% for a in appointments %}<li><a href="{{ a.get_absolute_url }}">{{ a.date|date:"d.m.Y" }} {{ a.time|time:"H:i" }} — {{ a.patient }} ({{ a.get_status_display }})</a></li>{% empty %}<li>Нет записей</li>{% endfor %}</ul>
+{% endblock %}

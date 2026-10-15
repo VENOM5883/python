@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h1>Статистика</h1>
+<ul class="stats">
+  <li>Всего приёмов: <b>{{ totals.total }}</b></li>
+  <li>Средняя стоимость: <b>{{ totals.avg_price|floatformat:2 }} руб.</b></li>
+  <li>Выручка по завершённым: <b>{{ totals.revenue|default:0 }} руб.</b></li>
+  <li>Отделение-лидер: <b>{{ by_department.0.name }}</b></li>
+  <li>Есть отменённые записи: <b>{{ has_cancelled|yesno:"да,нет" }}</b></li>
+</ul>
+<h2>По статусам</h2><ul>{% for label, count in by_status %}<li>{{ label }}: {{ count }}</li>{% endfor %}</ul>
+<h2>По отделениям</h2><ul>{% for d in by_department %}<li>{{ d.name }}: {{ d.appointments }}</li>{% endfor %}</ul>
+<h2>Самые загруженные врачи</h2><ol>{% for d in top_doctors %}<li>{{ d.full_name }} — {{ d.n }}</li>{% endfor %}</ol>
+{% endblock %}

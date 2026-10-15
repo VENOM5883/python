@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Записи{% endblock %}
+{% block content %}
+<h1>Записи на приём</h1>
+<form method="get" class="filters">
+  <input name="q" value="{{ request.GET.q }}" placeholder="Пациент, врач или жалобы">
+  <select name="status"><option value="">Все статусы</option>
+    {% for value, label in statuses %}<option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <select name="department"><option value="">Все отделения</option>
+    {% for d in departments %}<option value="{{ d.pk }}" {% if request.GET.department == d.pk|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>{% endfor %}
+  </select>
+  <label><input type="checkbox" name="hide_cancelled" value="1" {% if request.GET.hide_cancelled %}checked{% endif %}> Скрыть отменённые</label>
+  <select name="sort">
+    <option value="date" {% if sort == "date" %}selected{% endif %}>Сначала новые</option>
+    <option value="-date" {% if sort == "-date" %}selected{% endif %}>Сначала старые</option>
+    <option value="patient" {% if sort == "patient" %}selected{% endif %}>По пациенту</option>
+    <option value="doctor" {% if sort == "doctor" %}selected{% endif %}>По врачу</option>
+    <option value="price" {% if sort == "price" %}selected{% endif %}>Сначала дешёвые</option>
+    <option value="-price" {% if sort == "-price" %}selected{% endif %}>Сначала дорогие</option>
+  </select>
+  <button>Применить</button>
+</form>
+<table>
+  <tr><th>Дата</th><th>Время</th><th>Пациент</th><th>Врач</th><th>Отделение</th><th>Статус</th><th>Стоимость</th><th></th></tr>
+  {% for a in page %}
+  <tr>
+    <td>{{ a.date|date:"d.m.Y" }}</td><td>{{ a.time|time:"H:i" }}</td><td>{{ a.patient }}</td>
+    <td><a href="{% url 'clinic:doctor_detail' a.doctor.pk %}">{{ a.doctor.full_name }}</a></td>
+    <td>{{ a.doctor.department }}</td><td class="status {{ a.status }}">{{ a.get_status_display }}</td><td>{{ a.price }}</td>
+    <td><a href="{{ a.get_absolute_url }}">Открыть</a>
+      {% if perms.clinic.change_appointment %} · <a href="{% url 'clinic:appointment_edit' a.pk %}">Изменить</a>{% endif %}
+      {% if perms.clinic.delete_appointment %} · <a href="{% url 'clinic:appointment_delete' a.pk %}">Удалить</a>{% endif %}</td>
+  </tr>
+  {% empty %}<tr><td colspan="8">Записи не найдены</td></tr>
+  {% endfor %}
+</table>
+<div class="pagination">
+  {% if page.has_previous %}<a href="?{{ query_string }}&page={{ page.previous_page_number }}">← Назад</a>{% endif %}
+  {% for n in page.paginator.page_range %}
+    {% if n == page.number %}<b>{{ n }}</b>{% else %}<a href="?{{ query_string }}&page={{ n }}">{{ n }}</a>{% endif %}
+  {% endfor %}
+  {% if page.has_next %}<a href="?{{ query_string }}&page={{ page.next_page_number }}">Вперёд →</a>{% endif %}
+  <span>Всего: {{ page.paginator.count }}</span>
+</div>
+{% endblock %}

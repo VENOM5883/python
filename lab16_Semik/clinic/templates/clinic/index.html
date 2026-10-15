@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h1>Медицинская клиника «МедЦентр»</h1>
+<p>Информационная система учёта пациентов, врачей, отделений и записей на приём.</p>
+<ul class="stats">{% for title, value in counts.items %}<li>{{ title }}: <b>{{ value }}</b></li>{% endfor %}</ul>
+<p>{% if user.is_authenticated %}Вы вошли как <b>{{ user.username }}</b>.{% else %}Войдите, чтобы просматривать записи.{% endif %}</p>
+<p><a class="button" href="{% url 'clinic:appointment_list' %}">Записи на приём</a>
+   <a class="button" href="{% url 'clinic:statistics' %}">Статистика</a></p>
+{% endblock %}

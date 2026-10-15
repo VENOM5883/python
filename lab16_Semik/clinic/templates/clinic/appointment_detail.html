@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Приём №{{ object.pk }}{% endblock %}
+{% block content %}
+<h1>Приём №{{ object.pk }}</h1>
+<div class="card">
+  <p>Дата и время: <b>{{ object.date|date:"d.m.Y" }} {{ object.time|time:"H:i" }}</b></p>
+  <p>Пациент: {{ object.patient }} (тел. {{ object.patient.phone }}, д.р. {{ object.patient.birth_date|date:"d.m.Y" }})</p>
+  <p>Врач: <a href="{% url 'clinic:doctor_detail' object.doctor.pk %}">{{ object.doctor }}</a>, каб. {{ object.doctor.cabinet }}</p>
+  <p>Отделение: {{ object.doctor.department }}</p>
+  <p>Статус: <span class="status {{ object.status }}">{{ object.get_status_display }}</span>, стоимость {{ object.price }} руб.</p>
+  <p>Жалобы: {{ object.complaints|default:"—" }}</p>
+  <p>Диагнозы: {% for d in object.diagnoses.all %}{{ d }}{% if not forloop.last %}; {% endif %}{% empty %}—{% endfor %}</p>
+</div>
+<h2>История посещений пациента</h2>
+<ul>{% for h in history %}<li><a href="{{ h.get_absolute_url }}">{{ h.date|date:"d.m.Y" }} — {{ h.doctor.full_name }} ({{ h.get_status_display }})</a></li>{% empty %}<li>Других посещений нет</li>{% endfor %}</ul>
+{% if perms.clinic.change_appointment %}<a class="button" href="{% url 'clinic:appointment_edit' object.pk %}">Изменить</a>{% endif %}
+{% if perms.clinic.delete_appointment %}<a class="button danger" href="{% url 'clinic:appointment_delete' object.pk %}">Удалить</a>{% endif %}
+{% endblock %}
