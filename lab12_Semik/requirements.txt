@@ -1,0 +1,4 @@
+SQLAlchemy>=2.0
+psycopg[binary]>=3.1   # драйвер PostgreSQL
+python-dotenv>=1.0
+pytest>=8.0
