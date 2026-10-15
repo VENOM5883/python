@@ -1,0 +1,13 @@
+<label>Название <input name="name" value="{{ values.name or '' }}" required></label>
+<label>Производитель <input name="manufacturer" value="{{ values.manufacturer or '' }}" required></label>
+<label>Форма выпуска <input name="form" value="{{ values.form or '' }}" required></label>
+<label>Цена, руб. <input name="price" type="number" step="0.01" min="0.01" value="{{ values.price or '' }}" required></label>
+<label>Количество <input name="quantity" type="number" min="0" value="{{ values.quantity if values.quantity is not none else '' }}" required></label>
+<label>Категория
+  <select name="category_id">
+    {% for c in categories %}
+      <option value="{{ c.id }}" {% if values.category_id|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+</label>
+<label><input type="checkbox" name="prescription_required" {% if values.prescription_required in (true, 'on') %}checked{% endif %}> Отпуск по рецепту</label>

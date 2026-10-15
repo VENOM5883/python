@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Аптека{% endblock %} — Аптека «Здоровье»</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav>
+  <a href="{{ url_for('web.index') }}">Главная</a>
+  <a href="{{ url_for('web.medicine_list') }}">Каталог</a>
+  <a href="{{ url_for('web.medicine_create') }}">Добавить препарат</a>
+  <a href="{{ url_for('web.purchases') }}">Покупки</a>
+</nav>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

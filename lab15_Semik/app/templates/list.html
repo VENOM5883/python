@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Каталог{% endblock %}
+{% block content %}
+<h1>Каталог препаратов</h1>
+<form method="get" class="filters">
+  <input name="search" placeholder="Название или производитель" value="{{ args.get('search', '') }}">
+  <select name="category">
+    <option value="">Все категории</option>
+    {% for c in categories %}
+      <option value="{{ c.id }}" {% if args.get('category') == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="prescription">
+    <option value="">Рецепт: любой</option>
+    <option value="yes" {% if args.get('prescription') == 'yes' %}selected{% endif %}>Только по рецепту</option>
+    <option value="no" {% if args.get('prescription') == 'no' %}selected{% endif %}>Без рецепта</option>
+  </select>
+  <label><input type="checkbox" name="in_stock" {% if args.get('in_stock') %}checked{% endif %}> В наличии</label>
+  <select name="sort">
+    {% for value, title in [('name','По названию'),('price','Сначала дешёвые'),('-price','Сначала дорогие'),('quantity','По остатку')] %}
+      <option value="{{ value }}" {% if args.get('sort') == value %}selected{% endif %}>{{ title }}</option>
+    {% endfor %}
+  </select>
+  <button>Применить</button>
+</form>
+{% if medicines %}
+<table>
+  <tr><th>Название</th><th>Категория</th><th>Форма</th><th>Цена, руб.</th><th>Остаток</th><th></th></tr>
+  {% for m in medicines %}
+  <tr>
+    <td><a href="{{ url_for('web.medicine_detail', medicine_id=m.id) }}">{{ m.name }}</a>
+      {% if m.prescription_required %}<span class="badge">Rx</span>{% endif %}</td>
+    <td><a href="{{ url_for('web.category_detail', category_id=m.category.id) }}">{{ m.category.name }}</a></td>
+    <td>{{ m.form }}</td><td>{{ m.price }}</td>
+    <td class="{{ 'out' if m.quantity == 0 }}">{{ m.quantity }}</td>
+    <td><a href="{{ url_for('web.medicine_edit', medicine_id=m.id) }}">Изменить</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Препараты не найдены.</p>
+{% endif %}
+{% endblock %}

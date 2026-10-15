@@ -1,0 +1,15 @@
+body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; color: #1f2d2a; }
+nav { background: #2e7d5b; padding: 12px 24px; }
+nav a { color: #fff; margin-right: 18px; text-decoration: none; font-weight: bold; }
+main { max-width: 980px; margin: 24px auto; padding: 0 16px; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th, td { padding: 8px; border-bottom: 1px solid #dde5e2; text-align: left; }
+.card { background: #fff; padding: 16px; margin: 12px 0; border-radius: 6px; }
+.card label { display: block; margin: 8px 0; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.button, button { background: #2e7d5b; color: #fff; border: 0; padding: 8px 14px; border-radius: 4px; text-decoration: none; cursor: pointer; }
+.danger { background: #c62828; }
+.flash { padding: 10px; margin-bottom: 12px; border-radius: 4px; }
+.flash.success { background: #d7f0e2; } .flash.error { background: #f8d7da; }
+.badge { background: #c62828; color: #fff; font-size: 11px; padding: 1px 5px; border-radius: 3px; }
+.out { color: #c62828; font-weight: bold; }

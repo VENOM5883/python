@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Новый препарат{% endblock %}
+{% block content %}
+<h1>Новый препарат</h1>
+<form method="post" class="card">
+  {% with values = form %}{% include "_form.html" %}{% endwith %}
+  <button>Сохранить</button>
+</form>
+{% endblock %}

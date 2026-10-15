@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block content %}
+<h1>Категория «{{ category.name }}»</h1>
+<p>{{ category.description }}</p>
+<ul>
+  {% for m in category.medicines %}
+    <li><a href="{{ url_for('web.medicine_detail', medicine_id=m.id) }}">{{ m.name }}</a> — {{ m.price }} руб.</li>
+  {% else %}
+    <li>В категории нет препаратов</li>
+  {% endfor %}
+</ul>
+{% endblock %}

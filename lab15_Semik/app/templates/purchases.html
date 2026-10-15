@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Покупки{% endblock %}
+{% block content %}
+<h1>Оформление покупки</h1>
+<form method="post" class="card">
+  <label>Покупатель <input name="customer_name" required></label>
+  <table>
+    <tr><th>Препарат</th><th>Цена</th><th>В наличии</th><th>Количество</th></tr>
+    {% for m in medicines %}
+    <tr><td>{{ m.name }}{% if m.prescription_required %} <span class="badge">Rx</span>{% endif %}</td>
+        <td>{{ m.price }}</td><td>{{ m.quantity }}</td>
+        <td><input type="number" name="qty_{{ m.id }}" min="0" value="0"></td></tr>
+    {% endfor %}
+  </table>
+  <button>Оформить покупку</button>
+</form>
+<h2>История покупок</h2>
+{% for p in purchases %}
+  <div class="card">№{{ p.id }} — {{ p.customer_name }}, {{ p.created_at.strftime('%d.%m.%Y %H:%M') }}, <b>{{ p.total }} руб.</b>
+    <ul>{% for item in p.items %}<li>{{ item.medicine.name }} × {{ item.quantity }} по {{ item.price }}</li>{% endfor %}</ul>
+  </div>
+{% else %}
+  <p>Покупок пока нет.</p>
+{% endfor %}
+{% endblock %}

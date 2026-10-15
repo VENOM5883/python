@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Редактирование{% endblock %}
+{% block content %}
+<h1>Редактирование: {{ medicine.name }}</h1>
+<form method="post" class="card">
+  {% with values = medicine %}{% include "_form.html" %}{% endwith %}
+  <button>Сохранить</button>
+  <a href="{{ url_for('web.medicine_detail', medicine_id=medicine.id) }}">Отмена</a>
+</form>
+{% endblock %}

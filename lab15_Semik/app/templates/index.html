@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h1>Аптека «Здоровье»</h1>
+<p>Каталог лекарственных средств и оформление покупок.</p>
+<ul class="stats">
+  <li>Препаратов в каталоге: <b>{{ stats.medicines }}</b></li>
+  <li>Категорий: <b>{{ stats.categories }}</b></li>
+  <li>Нет в наличии: <b>{{ stats.out_of_stock }}</b></li>
+  <li>Оформлено покупок: <b>{{ stats.purchases }}</b></li>
+</ul>
+<a class="button" href="{{ url_for('web.medicine_list') }}">Перейти в каталог</a>
+{% endblock %}
