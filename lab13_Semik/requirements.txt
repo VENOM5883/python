@@ -1,0 +1,5 @@
+pymongo>=4.6
+redis>=5.0
+mongomock>=4.1    # имитация MongoDB, если сервер не запущен
+fakeredis>=2.20   # имитация Redis, если сервер не запущен
+pytest>=8.0
