@@ -1,0 +1,5 @@
+flask>=3.0
+requests>=2.31
+redis>=5.0
+fakeredis>=2.20   # имитация Redis, если сервер Redis не запущен
+pytest>=8.0

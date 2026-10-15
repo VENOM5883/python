@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <rect width="240" height="240" fill="#3cb371"/>
+  <circle cx="120" cy="95" r="45" fill="#fff"/>
+  <rect x="55" y="150" width="130" height="70" rx="30" fill="#fff"/>
+  <text x="120" y="232" font-size="16" text-anchor="middle" fill="#fff">Врач №2</text>
+</svg>
