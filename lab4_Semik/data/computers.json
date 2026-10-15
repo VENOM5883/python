@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Office Mini",
+        "cpu": "Intel i3-12100",
+        "ram": 8,
+        "storage": 256,
+        "price": 35000.0
+    },
+    {
+        "name": "Gamer Pro",
+        "cpu": "AMD Ryzen 7 7700",
+        "ram": 32,
+        "storage": 1000,
+        "price": 145000.0
+    },
+    {
+        "name": "Workstation",
+        "cpu": "Intel i9-13900",
+        "ram": 64,
+        "storage": 2000,
+        "price": 260000.0
+    },
+    {
+        "name": "Student",
+        "cpu": "AMD Ryzen 5 5600",
+        "ram": 16,
+        "storage": 512,
+        "price": 55000.0
+    }
+]

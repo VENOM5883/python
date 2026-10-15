@@ -1,0 +1,5 @@
+name,cpu,ram,storage,price
+Office Mini,Intel i3-12100,8,256,35000.0
+Gamer Pro,AMD Ryzen 7 7700,32,1000,145000.0
+Workstation,Intel i9-13900,64,2000,260000.0
+Student,AMD Ryzen 5 5600,16,512,55000.0
