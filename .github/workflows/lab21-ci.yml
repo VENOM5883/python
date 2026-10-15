@@ -1,0 +1,44 @@
+# CI для итогового проекта (лабораторная №21, вариант 15, «Аптека»)
+name: lab21-ci
+
+on:
+  push:
+    paths: ["lab21_Semik/**", ".github/workflows/lab21-ci.yml"]
+  pull_request:
+    paths: ["lab21_Semik/**", ".github/workflows/lab21-ci.yml"]
+
+defaults:
+  run:
+    working-directory: lab21_Semik
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: lab21_Semik/requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Tests + coverage (порог 70 %)
+        run: pytest
+
+  docker:
+    needs: test          # образ собирается, только если тесты прошли
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t pharmacy-final:${{ github.sha }} .
+      - name: Smoke test container
+        run: |
+          docker run -d --name api -e DATABASE_URL=sqlite:////tmp/ci.db -p 8000:8000 pharmacy-final:${{ github.sha }}
+          for i in $(seq 1 20); do curl -sf http://localhost:8000/health && exit 0; sleep 1; done
+          docker logs api; exit 1

@@ -39,6 +39,6 @@ jobs:
         run: docker build -t pharmacy-api:${{ github.sha }} .
       - name: Smoke test container
         run: |
-          docker run -d --name api -e DATABASE_URL=sqlite:///./ci.db -p 8000:8000 pharmacy-api:${{ github.sha }}
+          docker run -d --name api -e DATABASE_URL=sqlite:////tmp/ci.db -p 8000:8000 pharmacy-api:${{ github.sha }}
           for i in $(seq 1 20); do curl -sf http://localhost:8000/health && exit 0; sleep 1; done
           docker logs api; exit 1

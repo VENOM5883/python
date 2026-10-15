@@ -19,8 +19,9 @@ def test_crud(client):
     assert created.status_code == 201
     medicine_id = created.json()["id"]
     assert client.get(f"/medicines/{medicine_id}").json()["name"] == "Аспирин"
-    assert client.put(f"/medicines/{medicine_id}", json={"name": "Аспирин", "category": "обезболивающие",
-                                                         "price": "105", "quantity": 5}).json()["price"] in ("105", "105.00")
+    updated = client.put(f"/medicines/{medicine_id}", json={"name": "Аспирин", "category": "обезболивающие",
+                                                            "price": "105", "quantity": 5})
+    assert float(updated.json()["price"]) == 105
     assert client.delete(f"/medicines/{medicine_id}").status_code == 204
     assert client.get(f"/medicines/{medicine_id}").status_code == 404
 
